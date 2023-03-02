@@ -5,10 +5,10 @@ ny = 100;
 ni = 5000;
 V = zeros(nx, ny);
 
-BC_x1 = 1;
+BC_x1 = 5;
 BC_x2 = 0;
 BC_y1 = -1;
-BC_y2 = -1;
+BC_y2 = 7;
 
 imbox = 0;
 
@@ -44,8 +44,6 @@ for k = 1:ni
                     V(i,j) = (V(i-1,j) + V(i+1, j) + V(i, j+1) + V(i, j-1))/4;
                 end
             end
-
-
 
             % boundry conditions
             if (BC_x1 ~= -1 && i == 1)
