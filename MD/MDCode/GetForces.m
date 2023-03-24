@@ -6,11 +6,37 @@ for i = 1:nAtoms
     Fx(i) = 0;
     Fy(i) = 0;
     Phi(i) = 0;
-%     if i == 10
-%         plot(x(i),y(i),'o','markers',48);
-%         hold on
-%     end
+    %     if i == 10
+    %         plot(x(i),y(i),'o','markers',48);
+    %         hold on
+    %     end
 
+    %---------- +x --------------
+    dx = x(i) - 5.43071e-9;
+
+    if abs(dx) < PhiCutoff
+        [aPhi, dPhidr ] = WallPot(dx, Epsilon, sigma);
+
+        ang = atan2(0,dx);
+        dFx = - dPhidr * cos(ang);
+
+        Phi(i) = Phi(i) + aPhi;
+        Fx(i) = Fx(i) + dFx;
+    end
+
+    %---------- -x --------------
+    dx = x(i) + 5.43071e-9;
+
+    if abs(dx) < PhiCutoff
+        [aPhi, dPhidr ] = WallPot(dx, Epsilon, sigma);
+
+        ang = atan2(0,dx);
+        dFx = - dPhidr * cos(ang);
+
+        Phi(i) = Phi(i) + aPhi;
+        Fx(i) = Fx(i) + dFx;
+    end
+    
     for j = 1:nAtoms
         if i == j, continue; end
         dx = x(i) - x(j);
@@ -22,15 +48,15 @@ for i = 1:nAtoms
         [aPhi dPhidr] = LJPot(r, Epsilon, sigma);
 
         ang = atan2(dy, dx);
-%         dx =  r*cos(ang)
-%         dy =  r*sin(ang)
+        %         dx =  r*cos(ang)
+        %         dy =  r*sin(ang)
 
         dFx = - dPhidr * cos(ang);
         dFy = - dPhidr * sin(ang);
 
-%         if i == 10
-%             plot(x(j),y(j),'ro','markers',48);
-%         end
+        %         if i == 10
+        %             plot(x(j),y(j),'ro','markers',48);
+        %         end
 
         Phi(i) = Phi(i) + aPhi;
         Fx(i) = Fx(i) + dFx;
